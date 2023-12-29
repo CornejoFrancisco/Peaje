@@ -12,7 +12,9 @@ public class ClienteDto {
     private Integer dni;
     private String apellido;
     private String nombre;
-    private long tarjetaCredito;
+    private Long tarjetaCredito;
     private Long vehiculo;
+
+
 }
 

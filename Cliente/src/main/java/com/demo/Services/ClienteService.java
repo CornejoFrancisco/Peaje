@@ -10,7 +10,7 @@ public interface ClienteService {
     void add(ClienteDto clienteDto);
     void update(ClienteDto clienteDto);
     void delete(Long id);
-    ResponseDto getById(Long id);
+    ClienteDto getById(Long id);
     List<Cliente> getAll();
 
 }

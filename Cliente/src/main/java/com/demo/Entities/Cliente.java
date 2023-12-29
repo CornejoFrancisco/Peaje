@@ -33,4 +33,5 @@ public class Cliente {
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
+
 }

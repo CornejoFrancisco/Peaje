@@ -35,20 +35,15 @@ public class ClienteServiceImpl implements ClienteService {
         this.restTemplate = restTemplate;
     }
 
-/*    @Override
+    @Override
     public void add(ClienteDto clienteDto) {
         Cliente cliente = new Cliente();
         cliente.setApellido(clienteDto.getApellido());
         cliente.setDni(clienteDto.getDni());
         cliente.setNombre(clienteDto.getNombre());
-        cliente.setTarjetaCredito(tarjetaCreditoRespository.getReferenceById(clienteDto.getTarjetaCredito()));
+        cliente.setTarjetaCredito(clienteDto.getTarjetaCredito());
         cliente.setVehiculo(vehiculoRespository.getReferenceById(clienteDto.getVehiculo()));
         clienteRespository.save(cliente);
-    }*/
-
-    @Override
-    public void add(ClienteDto clienteDto) {
-
     }
 
     @Override
@@ -66,29 +61,27 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
 
-    @Override
-    public ResponseDto getById(Long id) {
+    public ClienteDto getById(Long id) {
         ResponseDto responseDto = new ResponseDto();
-        Optional<Cliente> clienteOptional = clienteRespository.findById(id);
+        Optional<ClienteDto> clienteOptional = clienteRespository.findById(id).map(clienteDtoMapper).stream().findAny();
+        ClienteDto cliente = new ClienteDto();
 
         if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
+            cliente = clienteOptional.get();
             ResponseEntity<TarjetaCreditoDto> responseEntity = restTemplate.getForEntity(
                     "http://localhost:8083/tarjetaCredito/" + cliente.getTarjetaCredito(),
                     TarjetaCreditoDto.class);
 
-            responseDto.setCliente(cliente);
             TarjetaCreditoDto tarjetaCreditoDto = responseEntity.getBody();
             responseDto.setTarjetaCreditoDto(tarjetaCreditoDto);
         } else {
-            // Manejar el caso en el que el cliente no está presente (puedes lanzar una excepción, devolver un valor predeterminado, etc.)
-            // Por ejemplo:
             throw new NoSuchElementException("Cliente no encontrado con ID: " + id);
         }
 
-        return responseDto;
-    }
+        return cliente;
 
+
+    }
 
     @Override
     public List<Cliente> getAll() {
